@@ -1,0 +1,111 @@
+package com.service.netty;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+
+import java.util.Map;
+
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.service.enums.OptEnum;
+import com.service.finger.FingerInfoService;
+
+public class GrgbankingServerHandler extends ChannelInboundHandlerAdapter {
+
+	private Map<String, Object> impls;
+
+	public GrgbankingServerHandler() {
+
+	}
+
+	public GrgbankingServerHandler(Map<String, Object> impls) {
+		this.impls = impls;
+	}
+
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg)
+			throws Exception {
+		String message = "";
+		ByteBuf buf = (ByteBuf) msg;
+		byte[] req = new byte[buf.readableBytes()];// 获得缓冲区可读的字节数
+		buf.readBytes(req);
+
+		String body = new String(req, "UTF-8");
+		System.out.println("接收消息：" + body);
+		if (StringUtils.isNotBlank(body)) {
+			message = praseJSON(body);
+			System.out.println("响应消息：" + message);
+		}
+		if (StringUtils.isNotBlank(message)) {
+			ByteBuf resp = Unpooled.copiedBuffer(message.getBytes("UTF-8"));
+			ctx.write(resp);// 性能考虑，仅将待发送的消息发送到缓冲数组中，再通过调用flush方法，写入channel中
+		} else {
+			// 清空变量，释放内存
+			buf = null;
+			req = null;
+		}
+	}
+
+	@Override
+	public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+		// 将消息发送队列中的消息写入到SocketChannel中发送给对方。
+		ctx.flush();
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+			throws Exception {
+		System.out.println("异常退出");
+		cause.printStackTrace();
+		ctx.close();
+	}
+
+	private String praseJSON(String body) {
+		String message = null;
+		JSONObject json = null;
+		try {
+			json = JSONObject.fromObject(body);
+		} catch (Exception e) {
+			e.printStackTrace();
+			message = "请求数据不是JSON格式";
+		}
+		if (json != null) {
+			String opt = json.optString("type");
+			if (StringUtils.isBlank(opt)) {
+				message = "请求数据没有操作标示";
+			} else if (opt.toUpperCase().equals(
+					OptEnum.CreatePplReq.name().toUpperCase())) {
+				System.out.println("注册人员");
+				FingerInfoService fingerInfoService = (FingerInfoService) impls
+						.get(OptEnum.FINGER.name().toUpperCase());
+				message = fingerInfoService.enroll(body);
+				// 注册人员信息
+			} else if (opt.toUpperCase().equals(
+					OptEnum.CreateFgVeinReq.name().toUpperCase())) {
+				System.out.println("注册指静脉");
+				FingerInfoService fingerInfoService = (FingerInfoService) impls
+						.get(OptEnum.FINGER.name().toUpperCase());
+				message = fingerInfoService.saveFinger(body);
+				// 注册指静脉信息
+			} else if (opt.toUpperCase().equals(
+					OptEnum.MatchFgVeinReq.name().toUpperCase())) {
+				System.out.println("识别指静脉");
+				FingerInfoService fingerInfoService = (FingerInfoService) impls
+						.get(OptEnum.FINGER.name().toUpperCase());
+				message = fingerInfoService.matchFingers(body);
+				// 匹配指静脉信息
+			} else if (opt.toUpperCase().equals(
+					OptEnum.OnlyPwdCheck.name().toUpperCase())) {
+				System.out.println("识别密码");
+				FingerInfoService fingerInfoService = (FingerInfoService) impls
+						.get(OptEnum.FINGER.name().toUpperCase());
+				message = fingerInfoService.matchPassword(body);
+			}
+		}
+		return message;
+	}
+}
