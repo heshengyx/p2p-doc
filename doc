@@ -59,3 +59,17 @@
 
 
 /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /export/secondary -u http://10.1.53.72:8080/cloudstack/systemvm/systemvm64template-4.6.0-xen.vhd.bz2 -h xenserver -F
+
+stream {
+	  upstream backend {
+	    hash $remote_addr consistent;
+	    server 127.0.0.1:4701;
+	    server 127.0.0.1:4702;
+	  }
+	  server {
+	    listen 4700;
+	    proxy_connect_timeout 1s;
+	    proxy_timeout 3s;
+	    proxy_pass backend;
+	  }
+	}
