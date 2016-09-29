@@ -73,3 +73,20 @@ stream {
 	    proxy_pass backend;
 	  }
 	}
+
+log4j.rootLogger=INFO, stdout, errinfoLog
+
+log4j.appender.stdout = org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.Target = System.out
+log4j.appender.stdout.layout = org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern = %-d{yyyy-MM-dd HH:mm:ss} [%c]-[%p] %m%n
+ 
+log4j.appender.errinfoLog = org.apache.log4j.DailyRollingFileAppender 
+#log4j.appender.errinfoLog.File=/home/webapps/errinfoLog.log
+log4j.appender.errinfoLog.File = ${webapp.root}/WEB-INF/logs/grgbanking.log
+log4j.appender.errinfoLog.DatePattern = '.'yyyy-MM-dd
+#log4j.appender.errinfoLog.MaxFileSize=50000KB
+#log4j.appender.errinfoLog.MaxBackupIndex=10
+log4j.appender.errinfoLog.layout = org.apache.log4j.PatternLayout
+log4j.appender.errinfoLog.layout.ConversionPattern = %-d{yyyy-MM-dd HH:mm:ss} [%c]-[%p] %m%n
+log4j.appender.errinfoLog.encoding = UTF-8
