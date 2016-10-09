@@ -90,3 +90,44 @@ log4j.appender.errinfoLog.DatePattern = '.'yyyy-MM-dd
 log4j.appender.errinfoLog.layout = org.apache.log4j.PatternLayout
 log4j.appender.errinfoLog.layout.ConversionPattern = %-d{yyyy-MM-dd HH:mm:ss} [%c]-[%p] %m%n
 log4j.appender.errinfoLog.encoding = UTF-8
+
+
+10.1.53.76 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = 10.1.53.76)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = ORCL)
+    )
+  ) 
+  
+  
+ /*分为四步 */
+/*第1步：创建临时表空间  */
+create temporary tablespace grgfinger_temp 
+tempfile 'c:\databases\finger\grgfinger_temp.dbf' 
+size 50m  
+autoextend on  
+next 50m maxsize 20480m  
+extent management local;  
+ 
+/*第2步：创建数据表空间  */
+create tablespace grgfinger_data  
+logging  
+datafile 'c:\databases\finger\grgfinger_data.dbf' 
+size 50m  
+autoextend on  
+next 50m maxsize 20480m  
+extent management local;  
+ 
+/*第3步：创建用户并指定表空间  */
+create user finger identified by finger  
+default tablespace grgfinger_data  
+temporary tablespace grgfinger_temp;  
+ 
+/*第4步：给用户授予权限  */
+grant connect,resource,dba to finger;
+
+
+C:\Users\Administrator>exp finger/finger@orcl file=d:\finger_feature_gd.dmp tables=(finger_feature_gd)
+C:\Users\Administrator>imp C##facer/facer@platment  file=C:\finger_feature_gd.dmp  tables=(finger_feature_gd)
