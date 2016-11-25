@@ -26,3 +26,10 @@ http://www.kindle10000.com/
 https://kankandou.com/
 https://www.jiumodiary.com/
 http://kmate.me/download/
+
+
+cd data
+@java -classpath ../../lib/hsqldb-2.2.9.jar org.hsqldb.server.Server -port 9001 -database.0 file:electricdb -dbname.0 electric_db
+
+cd data
+@java -classpath ../../lib/hsqldb-2.2.9.jar org.hsqldb.util.DatabaseManager -url jdbc:hsqldb:hsql://localhost/electric_db
