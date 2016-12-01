@@ -29,6 +29,9 @@ http://kmate.me/download/
 easyui后台
 http://www.16sucai.com/uploadfile/show2013/0507001/#
 
+oracle
+http://bbs.csdn.net/topics/390719581?page=1
+
 cd data
 @java -classpath ../../lib/hsqldb-2.2.9.jar org.hsqldb.server.Server -port 9001 -database.0 file:electricdb -dbname.0 electric_db
 
