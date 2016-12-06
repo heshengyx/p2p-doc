@@ -41,20 +41,32 @@ cd data
 
 cd data
 @java -classpath ../../lib/hsqldb-2.2.9.jar org.hsqldb.util.DatabaseManager -url jdbc:hsqldb:hsql://localhost/electric_db
+CREATE TABLE Permission
+(
+    ID VARCHAR(32) NOT NULL,
+    NAME VARCHAR(100),
+    URL VARCHAR(100),
+    PARENT_ID VARCHAR(32),
+    ACTIVE INT,
+    VERSION INT,
+    CREATE_TIME DATETIME,
+    UPDATE_TIME DATETIME,
+    CREATE_BY VARCHAR(100),
+    UPDATE_BY VARCHAR(100),
+    REMARKS VARCHAR(1000),
+    PRIMARY KEY (ID)
+)
 
-关于多层级树形结构的项目列表
-public static List<Map> getTreeDep(List<Department> depList,Long parentId){
-    List<Map> mapList=new ArrayList<Map>();
-    for(Department department:depList){
-        if(department.getParentId()==parentId){
-            Map map=new HashedMap();
-            map.put("id",department.getId());
-            map.put("text",department.getName());
-            map.put("state",department.getIsDelete());
-            map.put("iconCls","emptyico");
-            map.put("children",getTreeDep(depList,department.getId()));
-            mapList.add(map);
-        }
-    }
-    return mapList;
-}
+CREATE TABLE ROLE
+(
+    ID VARCHAR(32) NOT NULL,
+    NAME VARCHAR(100),
+    ACTIVE INT,
+    VERSION INT,
+    CREATE_TIME DATETIME,
+    UPDATE_TIME DATETIME,
+    CREATE_BY VARCHAR(100),
+    UPDATE_BY VARCHAR(100),
+    REMARKS VARCHAR(1000),
+    PRIMARY KEY (ID)
+)
