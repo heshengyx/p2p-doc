@@ -1,0 +1,135 @@
+package com.grgbanking.vip.service.impl.socket;
+
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.concurrent.Callable;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class SendMsgCallable implements Callable<String> {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(SendMsgCallable.class);
+	
+	private String[] sendMsg; // 要发送的数据
+	private Socket socket; //连接套接字
+	
+	public SendMsgCallable(String sendMsg, String socketServerIp,
+			int socketServerPort) {
+		this.sendMsg = new String[]{sendMsg};
+		this.socket = new Socket();
+		try {
+			socket.connect(new InetSocketAddress(socketServerIp,
+					socketServerPort), 500);
+			logger.info("服务器[{}:{}]连接成功", socketServerIp, socketServerPort);
+		} catch (IOException e) {
+			this.sendMsg = null;
+			this.socket = null;
+			logger.error("服务器[{}:{}]连接异常", socketServerIp, socketServerPort, e);
+			throw new IllegalArgumentException("服务器连接异常");
+		}
+	}
+	
+	public SendMsgCallable(String[] sendMsg, String socketServerIp,
+			int socketServerPort) {
+		this.sendMsg = sendMsg;
+		this.socket = new Socket();
+		try {
+			socket.connect(new InetSocketAddress(socketServerIp,
+					socketServerPort), 500);
+			logger.info("服务器[{}:{}]连接成功", socketServerIp, socketServerPort);
+		} catch (IOException e) {
+			this.sendMsg = null;
+			this.socket = null;
+			logger.error("服务器[{}:{}]连接异常", socketServerIp, socketServerPort, e);
+			throw new IllegalArgumentException("服务器连接异常");
+		}
+	}
+	
+	@Override
+	public String call() throws Exception {
+		String message = null;
+		try {
+			logger.info("第一次发送消息开始"); 
+			logger.info("第一次发送消息内容: {}", sendMsg[0]); 
+			OutputStream out = null;
+			try {
+				out = socket.getOutputStream();
+				//发送消息
+				out.write(sendMsg[0].getBytes());
+				logger.info("第一次发送消息成功"); 
+			} catch (IOException e) {
+				logger.error("第一次发送消息异常", e);
+				throw new RuntimeException("第一次发送消息异常", e);
+			}
+			
+			logger.info("第一次接收消息开始"); 
+			//读取服务器端数据    
+			BufferedReader in = null;
+			try {
+				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				message = in.readLine();
+	            logger.info("第一次接收消息成功: {}", message);
+			} catch (IOException e) {
+				throw new RuntimeException("第一次接收消息异常", e);
+			}
+			
+			logger.info("第二次发送消息开始"); 
+			logger.info("第二次发送消息内容: {}", sendMsg[1]); 
+			try {
+				out = socket.getOutputStream();
+				//发送消息
+				out.write(sendMsg[1].getBytes());
+				logger.info("第二次发送消息成功"); 
+			} catch (IOException e) {
+				logger.error("第二次发送消息异常", e);
+				throw new RuntimeException("第二次发送消息异常", e);
+			}
+            
+			logger.info("第二次接收消息开始"); 
+			//读取服务器端数据    
+			try {
+				in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				message = in.readLine();     
+	            logger.info("第二次接收消息成功: {}", message);
+			} catch (IOException e) {
+				throw new RuntimeException("第二次接收消息异常", e);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		} finally {
+			try {
+				if (socket != null)
+					socket.close();
+			} catch (IOException e) {
+				logger.error("关闭客户端异常", e);
+			}
+		}
+		return message;
+	}
+
+}
+
+pool = Executors.newCachedThreadPool();
+SendMsgCallable client = null;
+		try {
+			//client = new SendMsgThread(message, serverHost, Integer.parseInt(serverPort));
+			client = new SendMsgCallable(message, serverHost, Integer.parseInt(serverPort));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//pool.execute(client);
+		Future<String> future = pool.submit(client);
+		try {
+			String msg = future.get();
+			System.out.println("返回消息：" + msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		pool.shutdown();
