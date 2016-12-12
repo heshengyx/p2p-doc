@@ -41,32 +41,25 @@ cd data
 
 cd data
 @java -classpath ../../lib/hsqldb-2.2.9.jar org.hsqldb.util.DatabaseManager -url jdbc:hsqldb:hsql://localhost/electric_db
-CREATE TABLE Permission
-(
-    ID VARCHAR(32) NOT NULL,
-    NAME VARCHAR(100),
-    URL VARCHAR(100),
-    PARENT_ID VARCHAR(32),
-    ACTIVE INT,
-    VERSION INT,
-    CREATE_TIME DATETIME,
-    UPDATE_TIME DATETIME,
-    CREATE_BY VARCHAR(100),
-    UPDATE_BY VARCHAR(100),
-    REMARKS VARCHAR(1000),
-    PRIMARY KEY (ID)
-)
 
-CREATE TABLE ROLE
-(
-    ID VARCHAR(32) NOT NULL,
-    NAME VARCHAR(100),
-    ACTIVE INT,
-    VERSION INT,
-    CREATE_TIME DATETIME,
-    UPDATE_TIME DATETIME,
-    CREATE_BY VARCHAR(100),
-    UPDATE_BY VARCHAR(100),
-    REMARKS VARCHAR(1000),
-    PRIMARY KEY (ID)
-)
+--1:无ORDER BY排序的写法。(效率最高)
+--(经过测试，此方法成本最低，只嵌套一层，速度最快！即使查询的数据量再大，也几乎不受影响，速度依然！)
+SELECT *
+  FROM (SELECT ROWNUM AS rowno, t.*
+          FROM emp t
+         WHERE hire_date BETWEEN TO_DATE ('20060501', 'yyyymmdd')
+                             AND TO_DATE ('20060731', 'yyyymmdd')
+           AND ROWNUM <= 20) table_alias
+ WHERE table_alias.rowno >= 10;
+
+--2:有ORDER BY排序的写法。(效率最高)
+--(经过测试，此方法随着查询范围的扩大，速度也会越来越慢哦！)
+SELECT *
+  FROM (SELECT tt.*, ROWNUM AS rowno
+          FROM (  SELECT t.*
+                    FROM emp t
+                   WHERE hire_date BETWEEN TO_DATE ('20060501', 'yyyymmdd')
+                                       AND TO_DATE ('20060731', 'yyyymmdd')
+                ORDER BY create_time DESC, emp_no) tt
+         WHERE ROWNUM <= 20) table_alias
+ WHERE table_alias.rowno >= 10;
