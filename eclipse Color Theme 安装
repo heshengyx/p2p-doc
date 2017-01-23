@@ -1,0 +1,31 @@
+安装过程中总是出现：
+
+eclipse Unable to read repository at http://eclipse-color-theme.github.com/update/content.xml.
+
+问题，网上搜了一大堆也没有解决问题，悲催啊。
+
+
+
+以下为安装Color Theme方法总结：
+
+1.打开eclipse ，help-Eclipse Marketplace中搜索下载
+
+2.http://eclipse-color-theme.github.io/update/
+
+在官网中下载更新包，解压后将features和plugins放在eclipse安装目录下的dropins中；
+
+3.网上其他地方下载主题安装包，如
+
+http://download.csdn.net/detail/bu2zhouzhu123/7899583
+
+http://download.csdn.net/detail/fka2004/5336299
+
+将文件解压后放在eclipse的dropins下面
+
+出现连接问题的可以试试在windows-preferences-General-Network Connectios中将Active Provider
+
+改为Manual,这涉及到内网外网的东西，具体可以到极客学院上搜索Eclipse安装方法
+
+
+
+最后，在windows-preferences-General-Appearance-Color Theme中可以应用主题
