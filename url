@@ -66,3 +66,19 @@ SELECT *
                 ORDER BY create_time DESC, emp_no) tt
          WHERE ROWNUM <= 20) table_alias
  WHERE table_alias.rowno >= 10;
+ 
+ 
+ http://yunpan.cn/cw5NtTybiykUE （提取码：89fc）
+
+http://rhel.ieesee.net/uingei/rhel-server-6.1-x86_64-dvd.iso
+
+Red Hat Enterprise Linux 6.1 Server (AMD64/Intel EM64T)
+
+boot.iso 250 MB MD5: ab5072eaf2f7cab28bd4da1c00dedd80 
+SHA-256: 91f1ff57787b5885561095a217eed2ef06a438a9f56a5c3aed24551b1afa06be 
+ed2k://|file|rhel-server-6.1-x86_64-boot.iso|262144000|DA929A1375F3BAAF5061AD82B07F90FF|/
+
+
+Red Hat Enterprise Linux 6.1光盘镜像下载地址：使用迅雷或者电驴下载,这是64位的哦
+
+ed2k://|file|%5B%E7%BA%A2%E5%B8%BD%E4%BC%81%E4%B8%9ALinux.6.1%5D.rhel-server-6.1-x86_64-dvd.iso|3600812032|d39b97540497d24175340915244e6da5|h=ni34qipkufzruqzid22lmiafg3sm6q3b
