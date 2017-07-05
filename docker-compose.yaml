@@ -1,0 +1,43 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  mysqldb:
+    container_name: mysqldb
+    image: mysqldb
+    environment:
+      MYSQL_DATABASE: biometrics
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - /usr/datas/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  eureka-server:
+    container_name: eureka-server
+    image: eureka-server
+    ports:
+      - 1111:1111
+
+  face-service-a:
+    container_name: face-service-a
+    image: face-service
+    #links:
+    #  - mysqldb:db
+    ports:
+      - 6661:6661
+
+  face-service-b:
+    container_name: face-service-b
+    image: face-service
+    #links:
+    #  - mysqldb:db
+    ports:
+      - 6662:6661
