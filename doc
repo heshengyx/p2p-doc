@@ -157,6 +157,8 @@ docker run --name mysql_db -p 3306:3306 -v $PWD/var/lib/mysql:/var/lib/mysql -v 
 
 docker run --name mysql_db -p 3306:3306 -v $PWD/var/lib/mysql:/var/lib/mysql -v $PWD/etc/mysql:/etc/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql_db
 
+docker run --name mysqldb -p 3306:3306 -v /usr/datas/mysql:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysqldb
+
 docker run --name eureka-server -p 1111:1111 -d eureka-server
 
 docker run --name face-service -p 6661:6661 -d face-service
