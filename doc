@@ -131,3 +131,34 @@ grant connect,resource,dba to finger;
 
 C:\Users\Administrator>exp finger/finger@orcl file=d:\finger_feature_gd.dmp tables=(finger_feature_gd)
 C:\Users\Administrator>imp C##facer/facer@platment  file=C:\finger_feature_gd.dmp  tables=(finger_feature_gd)
+
+ORACLE =
+ 
+(DESCRIPTION =
+ 
+  (ADDRESS = (PROTOCOL = TCP)(HOST =计算机名称)(PORT = 1521))
+ 
+  (CONNECT_DATA =
+ 
+    (SERVER = DEDICATED)
+ 
+    (SERVICE_NAME = oracle)
+ 
+   )
+ 
+)
+ 
+ 
+ 
+计算机名称可以右击‘我的电脑’找到
+
+
+docker run --name mysql_db -p 3306:3306 -v $PWD/var/lib/mysql:/var/lib/mysql -v $PWD/etc/mysql:/etc/mysql -e MYSQL_ROOT_PASSWORD=123456 -d hub.c.163.com/library/mysql
+
+docker run --name mysql_db -p 3306:3306 -v $PWD/var/lib/mysql:/var/lib/mysql -v $PWD/etc/mysql:/etc/mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql_db
+
+docker run --name eureka-server -p 1111:1111 -d eureka-server
+
+docker run --name face-service -p 6661:6661 -d face-service
+
+docker run --name face-service --link mysql:mysqldb -d -p 6661:6661 face-service
