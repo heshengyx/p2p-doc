@@ -17,8 +17,8 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
     volumes:
       - /usr/datas/mysql:/var/lib/mysql
-    ports:
-      - 3306:3306
+    #ports:
+    #  - 3306:3306
 
   eureka-server:
     container_name: eureka-server
@@ -29,15 +29,15 @@ services:
   face-service-a:
     container_name: face-service-a
     image: face-service
-    #links:
-    #  - mysqldb:db
+    links:
+      - mysqldb:mysqldb
     ports:
       - 6661:6661
 
   face-service-b:
     container_name: face-service-b
     image: face-service
-    #links:
-    #  - mysqldb:db
+    links:
+      - mysqldb:mysqldb
     ports:
       - 6662:6661
