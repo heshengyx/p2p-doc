@@ -1,0 +1,36 @@
+一、IP设置方法
+在suse操作系统中每个网卡都有一个配置文件，在/etc/sysconfig/network/目录下。用root登录,编辑ifcfg-eth0-你的网卡的物理地址的那个文件： 
+把BOOTPROTO的赋值改成成static，也就是BOOTPROTO=static 
+然后增加如下内容： 
+BOOTPROTO=static
+IPADDR=10.1.52.14
+NETMASK=255.255.255.0 
+NETWORK=10.1.52.0 
+BROADCAST=10.1.52.255
+配置完后 要让它生效，就输入/etc/init.d/network restart就可以生效
+
+二、打开22端口
+1.首先查看端口状态，可以使用命令
+-># netstat -an   (若查看某个端口，后面可接端口号)
+2.检查服务状态使用chkconfig，如检查SSH，
+-># chkconfig sshd
+如为off,则需要打开系统服务的端口，可用chkconfig on命令，如打开SSH，
+-># chkconfig ssh on service xinetd restart
+3.防火墙开放端口:
+（方法一：）
+i. 进入 /etc/sysconfig/ 目录，用 vi 命令编辑 SuSEfirewall2 文件，
+-># vi SuSEfirewall2
+在文件中找到FW_SERVICES_EXT_TCP，在其后面加上服务名或者是服务对应的端口，如SSH,
+FW_SERVICES_EXT_TCP=”ssh” 或 FW_SERVICES_EXT_TCP=”22″
+保存之后退出。
+ii. 重启防火墙，以使配置生效，
+-># rcSuEfirewall2 restart
+
+三、安装gcc
+安装GCC（DVD1）也可以直接在软件管理中安装
+zypper in gcc
+
+四、查看网关方法
+1、route -n
+2、ip route show
+3、netstat -r
