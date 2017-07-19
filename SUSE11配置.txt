@@ -1,36 +1,44 @@
-Ò»¡¢IPÉèÖÃ·½·¨
-ÔÚsuse²Ù×÷ÏµÍ³ÖĞÃ¿¸öÍø¿¨¶¼ÓĞÒ»¸öÅäÖÃÎÄ¼ş£¬ÔÚ/etc/sysconfig/network/Ä¿Â¼ÏÂ¡£ÓÃrootµÇÂ¼,±à¼­ifcfg-eth0-ÄãµÄÍø¿¨µÄÎïÀíµØÖ·µÄÄÇ¸öÎÄ¼ş£º 
-°ÑBOOTPROTOµÄ¸³Öµ¸Ä³É³Éstatic£¬Ò²¾ÍÊÇBOOTPROTO=static 
-È»ºóÔö¼ÓÈçÏÂÄÚÈİ£º 
+ä¸€ã€IPè®¾ç½®æ–¹æ³•
+åœ¨suseæ“ä½œç³»ç»Ÿä¸­æ¯ä¸ªç½‘å¡éƒ½æœ‰ä¸€ä¸ªé…ç½®æ–‡ä»¶ï¼Œåœ¨/etc/sysconfig/network/ç›®å½•ä¸‹ã€‚ç”¨rootç™»å½•,ç¼–è¾‘ifcfg-eth0-ä½ çš„ç½‘å¡çš„ç‰©ç†åœ°å€çš„é‚£ä¸ªæ–‡ä»¶ï¼š 
+æŠŠBOOTPROTOçš„èµ‹å€¼æ”¹æˆæˆstaticï¼Œä¹Ÿå°±æ˜¯BOOTPROTO=static 
+ç„¶åå¢åŠ å¦‚ä¸‹å†…å®¹ï¼š 
 BOOTPROTO=static
 IPADDR=10.1.52.14
 NETMASK=255.255.255.0 
 NETWORK=10.1.52.0 
 BROADCAST=10.1.52.255
-ÅäÖÃÍêºó ÒªÈÃËüÉúĞ§£¬¾ÍÊäÈë/etc/init.d/network restart¾Í¿ÉÒÔÉúĞ§
+é…ç½®å®Œå è¦è®©å®ƒç”Ÿæ•ˆï¼Œå°±è¾“å…¥/etc/init.d/network restartå°±å¯ä»¥ç”Ÿæ•ˆ
 
-¶ş¡¢´ò¿ª22¶Ë¿Ú
-1.Ê×ÏÈ²é¿´¶Ë¿Ú×´Ì¬£¬¿ÉÒÔÊ¹ÓÃÃüÁî
--># netstat -an   (Èô²é¿´Ä³¸ö¶Ë¿Ú£¬ºóÃæ¿É½Ó¶Ë¿ÚºÅ)
-2.¼ì²é·şÎñ×´Ì¬Ê¹ÓÃchkconfig£¬Èç¼ì²éSSH£¬
+äºŒã€æ‰“å¼€22ç«¯å£
+1.é¦–å…ˆæŸ¥çœ‹ç«¯å£çŠ¶æ€ï¼Œå¯ä»¥ä½¿ç”¨å‘½ä»¤
+-># netstat -an   (è‹¥æŸ¥çœ‹æŸä¸ªç«¯å£ï¼Œåé¢å¯æ¥ç«¯å£å·)
+2.æ£€æŸ¥æœåŠ¡çŠ¶æ€ä½¿ç”¨chkconfigï¼Œå¦‚æ£€æŸ¥SSHï¼Œ
 -># chkconfig sshd
-ÈçÎªoff,ÔòĞèÒª´ò¿ªÏµÍ³·şÎñµÄ¶Ë¿Ú£¬¿ÉÓÃchkconfig onÃüÁî£¬Èç´ò¿ªSSH£¬
+å¦‚ä¸ºoff,åˆ™éœ€è¦æ‰“å¼€ç³»ç»ŸæœåŠ¡çš„ç«¯å£ï¼Œå¯ç”¨chkconfig onå‘½ä»¤ï¼Œå¦‚æ‰“å¼€SSHï¼Œ
 -># chkconfig ssh on service xinetd restart
-3.·À»ğÇ½¿ª·Å¶Ë¿Ú:
-£¨·½·¨Ò»£º£©
-i. ½øÈë /etc/sysconfig/ Ä¿Â¼£¬ÓÃ vi ÃüÁî±à¼­ SuSEfirewall2 ÎÄ¼ş£¬
+3.é˜²ç«å¢™å¼€æ”¾ç«¯å£:
+ï¼ˆæ–¹æ³•ä¸€ï¼šï¼‰
+i. è¿›å…¥ /etc/sysconfig/ ç›®å½•ï¼Œç”¨ vi å‘½ä»¤ç¼–è¾‘ SuSEfirewall2 æ–‡ä»¶ï¼Œ
 -># vi SuSEfirewall2
-ÔÚÎÄ¼şÖĞÕÒµ½FW_SERVICES_EXT_TCP£¬ÔÚÆäºóÃæ¼ÓÉÏ·şÎñÃû»òÕßÊÇ·şÎñ¶ÔÓ¦µÄ¶Ë¿Ú£¬ÈçSSH,
-FW_SERVICES_EXT_TCP=¡±ssh¡± »ò FW_SERVICES_EXT_TCP=¡±22¡å
-±£´æÖ®ºóÍË³ö¡£
-ii. ÖØÆô·À»ğÇ½£¬ÒÔÊ¹ÅäÖÃÉúĞ§£¬
+åœ¨æ–‡ä»¶ä¸­æ‰¾åˆ°FW_SERVICES_EXT_TCPï¼Œåœ¨å…¶åé¢åŠ ä¸ŠæœåŠ¡åæˆ–è€…æ˜¯æœåŠ¡å¯¹åº”çš„ç«¯å£ï¼Œå¦‚SSH,
+FW_SERVICES_EXT_TCP=â€sshâ€ æˆ– FW_SERVICES_EXT_TCP=â€22â€³
+ä¿å­˜ä¹‹åé€€å‡ºã€‚
+ii. é‡å¯é˜²ç«å¢™ï¼Œä»¥ä½¿é…ç½®ç”Ÿæ•ˆï¼Œ
 -># rcSuEfirewall2 restart
 
-Èı¡¢°²×°gcc
-°²×°GCC£¨DVD1£©Ò²¿ÉÒÔÖ±½ÓÔÚÈí¼ş¹ÜÀíÖĞ°²×°
+ä¸‰ã€å®‰è£…gccï¼Œg++
+å®‰è£…GCCï¼ˆDVD1ï¼‰ä¹Ÿå¯ä»¥ç›´æ¥åœ¨è½¯ä»¶ç®¡ç†ä¸­å®‰è£…
 zypper in gcc
+zypper in gcc-c++
 
-ËÄ¡¢²é¿´Íø¹Ø·½·¨
-1¡¢route -n
-2¡¢ip route show
-3¡¢netstat -r
+å››ã€æŸ¥çœ‹glibcç‰ˆæœ¬
+rpm -qa | grep glibc
+-># glibc-2.11.3-17.84.1
+
+äº”ã€æŸ¥çœ‹ç½‘å…³æ–¹æ³•
+1ã€route -n
+2ã€ip route show
+3ã€netstat -r
+
+http://pan.baidu.com/s/1pLL8RMj
+å¯†ç :7pak
