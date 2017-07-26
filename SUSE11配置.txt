@@ -33,7 +33,7 @@ zypper in gcc-c++
 
 四、查看gcc，gcc-c++版本
 gcc --version
-gcc-c++ --version
+g++ --version
 
 五、查看glibc版本
 rpm -qa | grep glibc
