@@ -26,16 +26,20 @@ FW_SERVICES_EXT_TCP=”ssh” 或 FW_SERVICES_EXT_TCP=”22″
 ii. 重启防火墙，以使配置生效，
 -># rcSuEfirewall2 restart
 
-三、安装gcc，g++
+三、安装gcc，gcc-c++
 安装GCC（DVD1）也可以直接在软件管理中安装
 zypper in gcc
 zypper in gcc-c++
 
-四、查看glibc版本
+四、查看gcc，gcc-c++版本
+gcc --version
+gcc-c++ --version
+
+五、查看glibc版本
 rpm -qa | grep glibc
 -># glibc-2.11.3-17.84.1
 
-五、查看网关方法
+六、查看网关方法
 1、route -n
 2、ip route show
 3、netstat -r
