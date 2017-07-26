@@ -1,0 +1,84 @@
+CentOS是完全免费的，它的yum可以直接使用；而RedHat的yum则需要注册付费才能使用，如果不这样则有两种解决方案，也可以说是三种。
+
+1. 利用iso镜像做本地yum源
+
+2. 利用光盘做本地yum源
+
+3. 利用Centos的在线地址做本地yum源
+
+在这里用iso或者光盘做本地yum源的方法是差不多的，只是用光盘的话Linux系统会自动挂载，用iso镜像的或需要手动挂载，这里就说挂载iso的方法吧。
+
+【一】用本地文件创建本地yum源
+
+1. 创建iso存放目录和挂载目录
+
+    mkdir /mnt/iso 
+
+    mkdir /mnt/cdrom
+
+2. 将iso镜像文件上传到/mnt/iso文件夹下
+
+3. 将/mnt/iso/下的iso文件挂载到/mnt/cdrom目录
+
+    mount -o loop /mnt/iso/XXXXX.iso /mnt/cdrom  <注：挂载完之后对其操作会提示设备繁忙，此时需要umount解开挂载才行>
+
+    查看是否挂载成功：  df -h <用来查看系统中所有挂载的，mount也可以>
+
+4.<最关键的一步>如果/etc/yum.repos/下面有其它的*.repo文件，先创建个文件夹，将这些*.repo先转移到文件夹中，自己写一个.repo的文件
+
+      mkdir /etc/yum.repos.d/bak    mv *.repo /etc/yum.repos.d/bak    然后创建自己的.repo文件
+
+      vi myself.repo
+
+      [base]
+
+      name=RedHat
+
+      baseurl=file:///mnt/cdrom    #注：这里的baseurl就是你挂载的目录，在这里是/mnt/cdrom
+
+      enabled=1                            #注：这里的值enabled一定要为1  gpgckeck的值无所谓
+
+      gpgckeck=0
+
+      gpgkey=file:///mnt/cdrom/RPM-GPG-KEY-CentOS-5                    #注：这个你cd /mnt/cdrom/可以看到这个key，这里仅仅是个例子
+
+5. 测试：
+
+    yum clean all
+
+    yum install vim*
+
+ 【二】用CentOS的网址创建yum源
+
+      只需要将/etc/yum.repos.d/下面的*.repo文件放在bak文件夹下，创建自己的.repo文件，如以下配置
+
+      [base]
+      name=RedHat
+      baseurl=http://mirrors.163.com/centos/6/os/$basearch/
+      enabled=1
+      gpgcheck=0
+      gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-6
+
+      浏览器中可以访问网址：http://mirrors.163.com/centos    后面的安装你需要的CentOS的版本来配置
+
+【其它】
+
+      yum grouplist  显示的结果为已经安装的组包，未安装的组包，语言包等。
+
+    在安装openmeeting的时候在RedHat6.2上就是用的CentOS 6的yum在线源，而且成功安装了Office/Productivity组包
+
+在新安装的Linux系统命令行下，
+
+敲入：ifconfig,显示如下界面。
+只有lo，没有eth0
+继续敲入代码：vi /etc/sysconfig/network-scripts/ifcfg-eth0 (cat /etc/sysconfig/network-scripts/ifcfg-eth0 这条命令是查看)
+
+进入到网卡配置文件中。
+DEVICE=eth0(默认)
+HWADDR=00:0C:29:2E:36:16(默认)
+TYPE=Ethernet(默认)
+UUID=XXXXXXX(默认)
+ONBOOT=yes(默认为no,修改为yes意为每次reboot后 ifup eth0)
+MM_CONTROLLED=yes(默认)
+保存。退出
+那么我们敲入代码：ifup eth0启动网卡。
