@@ -40,13 +40,22 @@ CentOS是完全免费的，它的yum可以直接使用；而RedHat的yum则需�
 
       gpgckeck=0
 
-      gpgkey=file:///mnt/cdrom/RPM-GPG-KEY-CentOS-5                    #注：这个你cd /mnt/cdrom/可以看到这个key，这里仅仅是个例子
+      gpgkey=file:///mnt/cdrom/RPM-GPG-KEY-CentOS-5                    #注：这个你cd /mnt/cdrom/可以看到这个key，这里仅仅是个例
+      vi myself.repo
+[base]
+name=RedHat
+baseurl=file:///mnt/cdrom
+enabled=1
+gpgckeck=0
+gpgkey=file:///mnt/cdrom/RPM-GPG-KEY-CentOS-6
 
 5. 测试：
 
     yum clean all
 
     yum install vim*
+6. 卸载
+    umount /mnt/cdrom
 
  【二】用CentOS的网址创建yum源
 
