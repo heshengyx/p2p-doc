@@ -82,3 +82,7 @@ ONBOOT=yes(默认为no,修改为yes意为每次reboot后 ifup eth0)
 MM_CONTROLLED=yes(默认)
 保存。退出
 那么我们敲入代码：ifup eth0启动网卡。
+
+配置上网
+vi /etc/resolv.conf
+nameserver 10.1.1.1
