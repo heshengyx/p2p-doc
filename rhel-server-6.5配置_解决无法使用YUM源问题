@@ -1,0 +1,45 @@
+RHEL6解决无法使用YUM源问题
+RHEL的YUM源需要注册用户才能更新使用，由于CentOS和RHEL基本没有区别，并且CentOS已经被REHL收购。所以将RHEL的YUM源替换为CentOS即可。
+1.检查是否安装yum包。查看RHEL是否安装了yum，若是安装了，那么又有哪些yum包：
+    rpm -qa |grep yum
+2 删除redhat自带的yum包
+    rpm -qa|grep yum|xargs rpm -e --nodeps（不检查依赖，直接删除rpm包）
+    rpm -qa |grep yum （查询确认）
+3.下载centos6的相关软件包。
+    wget http://mirrors.kernel.org/centos/6/os/x86_64/Packages/yum-3.2.29-81.el6.centos.noarch.rpm
+    wget http://mirrors.kernel.org/centos/6/os/x86_64/Packages/yum-plugin-fastestmirror-1.1.30-40.el6.noarch.rpm
+    wget http://mirrors.kernel.org/centos/6/os/x86_64/Packages/yum-metadata-parser-1.1.2-16.el6.x86_64.rpm
+    wget http://mirrors.kernel.org/centos/6/os/x86_64/Packages/python-iniparse-0.3.1-2.1.el6.noarch.rpm
+    wget http://mirrors.kernel.org/centos/6/os/x86_64/Packages/python-urlgrabber-3.9.1-11.el6.noarch.rpm
+
+4.安装软件包。
+rpm -ivh python-iniparse-0.3.1-2.1.el6.noarch.rpm
+rpm -ivh python-urlgrabber-3.9.1-11.el6.noarch.rpm
+rpm -ivh yum-metadata-parser-1.1.2-16.el6.x86_64.rpm
+rpm -ivh yum-plugin-fastestmirror-1.1.30-40.el6.noarch.rpm yum-3.2.29-81.el6.centos.noarch.rpm
+*注释yum-plugin-fastestmirror和yum-3.2.29要一起安装。
+
+如果按照遇到问题：发现错误，python-urlgrabber版本必须大于等于3.9.1-10
+ # rpm -ivh  yum-3.2.29-73.el6.centos.noarch.rpm yum-plugin-fastestmirror-1.1.30-37.el6.noarch.rpm
+warning: yum-3.2.29-73.el6.centos.noarch.rpm: Header V3 RSA/SHA1 Signature, key ID c105b9de: NOKEY
+error: Failed dependencies:
+    python-urlgrabber >= 3.9.1-10 is needed by yum-3.2.29-73.el6.centos.noarch
+查看系统的python信息
+# rpm -qa|grep python
+
+发现python-urlgrabber-3.9.1-9.el6.noarch 版本低于3.9.1-10 
+卸载：python-urlgrabber-3.9.1-9.el6.noarch
+ rpm -e python-urlgrabber-3.9.1-9.el6.noarch
+安装：rpm -ivh python-urlgrabber-3.9.1-11.el6.noarch.rpm
+重新执行：rpm -ivh yum-plugin-fastestmirror-1.1.30-40.el6.noarch.rpm yum-3.2.29-81.el6.centos.noarch.rpm
+
+5.更换yum源，将原有源删除或备份到别的目下下
+    cd /etc/yum.repos.d/
+    mv rhel-source.repo rhel-source.repo.bak
+    上传CentOS-Base.repo文件
+6.清除原有缓存，重建缓存：
+    yum clean all
+    yum makecache
+    
+7.更新系统：
+    yum update
