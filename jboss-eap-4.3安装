@@ -19,7 +19,10 @@
 7、部署应用
    （1）直接将war包放到/usr/jboss/jboss-eap-4.3/jboss-as/server/default/deploy/下，也是最简单的方法
    （2）将war包拷贝到其他目录下，比如/opt/apps/下，需要修改/usr/jboss/jboss-eap-4.3/jboss-as/server/default/conf下的文件jboss-service.xml
-8、关闭jboss
+8、修改jboss端口
+   #cd /usr/jboss/jboss-eap-4.3/jboss-as/server/default/deploy/jboss-web.deployer
+   #vi server.xml
+9、关闭jboss
    #ps -ef|grep jboss
    #kill -9 进程号
 说明：jboss启动时默认只允许本机进行连接。
