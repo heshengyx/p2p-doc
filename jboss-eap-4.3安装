@@ -1,0 +1,28 @@
+1、安装环境
+   linux centos 6.5x64
+2、java版本
+   jdk1.6(jdk-6u45-linux-x64.bin)
+   #./jdk-6u45-linux-x64.bin
+   配置java环境变量
+3、jboss版本
+   jboss-eap-4.3
+   #cd /usr/jboss/jboss-eap-4.3/jboss-as/bin
+   #nohup ./run.sh -c default -b 0.0.0.0 &
+4、测试运行。
+   IE里输入http://IP:8080,如果出现jboss界面，说明配置没问题
+5、登录JMX Console
+   #cd /usr/jboss/jboss-eap-4.3/jboss-as/server/default/conf/props
+   #vi jmx-console-users.properties
+6、登录JBoss Web Console
+   #cd /usr/jboss/jboss-eap-4.3/jboss-as/server/default/deploy/management/console-mgr.sar/web-console.war/WEB-INF/classes/
+   #vi web-console-users.properties
+7、部署应用
+   （1）直接将war包放到/usr/jboss/jboss-eap-4.3/jboss-as/server/default/deploy/下，也是最简单的方法
+   （2）将war包拷贝到其他目录下，比如/opt/apps/下，需要修改/usr/jboss/jboss-eap-4.3/jboss-as/server/default/conf下的文件jboss-service.xml
+8、关闭jboss
+   #ps -ef|grep jboss
+   #kill -9 进程号
+说明：jboss启动时默认只允许本机进行连接。
+1.启动jboss时带上参数 -b IP ，如: ./run -b IP & 启动成功后，就可以使用远程连接jboss了，其中IP为jboss服务器的IP地址。
+2.虽然可以远程连接了，但在jboss本机却连接不了。如果需要允许远程和本地都能连接jboss，需要将启动时的IP地址写为0.0.0.0 即：./run -b 0.0.0.0 &
+3.-c, --configuration=               指定服务器启动的配置（default、all、minimal）
