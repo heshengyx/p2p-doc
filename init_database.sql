@@ -1,0 +1,1 @@
+CREATE DATABASE `fingervein` CHARACTER SET 'utf8';
