@@ -1,0 +1,40 @@
+msyql容器
+
+1、启动mysql容器，基于mysql镜像启动名为mysqldb的容器，密码为123456，以后台方式运行
+--name：定义容器别名
+-e：定义环境变量
+-d：后台方式运行
+$ docker run --name mysqldb -e MYSQL_ROOT_PASSWORD=123456 -d mysql
+-v：以宿主机配置文件启动，my.cnf文件需放到/usr/mysql目录下
+$ docker run --name mysqldb  -v /usr/mysql:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 -d mysql
+$ docker run --name fingervein-mysqldb  -v /usr/mysql:/etc/mysql/conf.d -e MYSQL_ROOT_PASSWORD=123456 -d grgbanking/fingervein-mysql:1.0
+
+2、进入容器内部，运行交互命令
+$ docker exec -it mysqldb /bin/bash
+$ docker exec -it fingervein-mysqldb /bin/bash
+
+3、登录mysql
+# mysql -u root -p123456
+
+4、查看表名区分大小写
+mysql> show variables like '%low%';
+其中 lower_case_table_names 的值是 0，0 代表区分大小写，1 代表不区分大小写
+
+5、创建数据库
+mysql> CREATE DATABASE `fingervein` CHARACTER SET 'utf8';
+mysql> exit #退出mysql
+
+6、退出容器命令行
+# exit
+
+$ docker build -t grgbanking/fingervein-mysql:1.0 . #创建镜像
+$ docker build -t grgbanking/fingervein-server:1.0 . #创建镜像
+$ docker run --name fingervein-server-9880 --link mysqldb:mysql -p 9880:8885 -d grgbanking/fingervein-server:1.0 #创建容器
+$ docker run --name fingervein-server-9881 --link mysqldb:mysql -p 9881:8885 -d grgbanking/fingervein-server:1.0 #创建容器
+
+$ docker ps -a #查看全部容器
+$ docker logs -f fingervein-server #查看容器日志
+$ docker stop fingervein-server #停止容器
+$ docker start fingervein-server #重启容器
+$ docker rm fingervein-server #删除容器
+$ docker rmi grgbanking/fingervein-server:1.0 #删除镜像
