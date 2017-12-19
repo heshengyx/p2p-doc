@@ -1,0 +1,97 @@
+1. 在重新进行安装之前，为确保万无一失，我们还是再确认一下系统中是否有MySQL极其相关的RPM安装包。如果有，则先删除。
+   #rpm -qa | grep -i mysql //mysql-libs-5.1.71-1.el6.x86_64
+   执行完上述命令后，返回空数据，则可进行第二步。否则，执行下面的命令删除MySQL的相关包文件。
+   #yum -y remove mysql-libs*
+2. 将前面提到的三个MySQL安装文件，拷贝到服务器，然后执行下述安装命令
+   #rpm -ivh MySQL-server-5.6.30-1.linux_glibc2.5.x86_64.rpm
+   #rpm -ivh MySQL-devel-5.6.30-1.linux_glibc2.5.x86_64.rpm
+   #rpm -ivh MySQL-client-5.6.30-1.linux_glibc2.5.x86_64.rpm
+   上述三个命令在执行时，只有第一个命令执行的时间稍微长些，后面两个命令运行速度很快。
+3. 执行下述命令，将MySQL的配置文件拷贝到/etc目录下。
+   #cp /usr/share/mysql/my-default.cnf /etc/my.cnf
+4. 分别运行下述命令，初始化MySQL及设置密码。
+   #/usr/bin/mysql_install_db    #初始化MySQL(可以不执行) 
+   #service mysql start        #启动MySQL 
+   #cat /root/.mysql_secret        #查看root账号的初始密码，会出现下述所示信息
+     The random password set for the root user at Mon Sep 29 15:01:52 2014 (local time): PENFgcgkI8UnIKaE
+   #mysql -u root -pPENFgcgkI8UnIKaE #登录mysql
+   mysql> set password=password('123456'); #更改MySQL密码
+   mysql> quit #退出MySQL
+5. 允许远程登陆
+   [root@localhost ~]# mysql -u root -p123456
+   mysql> use mysql;
+mysql> select host,user,password,password_expired from user;
+mysql> update user set password=password('123!@#456') where user='root'; #修改root密码
+mysql> update user set host='%' where user='root' and host='localhost'; #设置不限制ip地址登录
+mysql> flush privileges;
+mysql> exit
+发现表中密码过期，密码过期状态（password_expired字段值）是否为Y，Y表示已过期，需要修改为N
+6. 设置开机启动
+   #chkconfig mysql on
+   #chkconfig --list | grep mysql
+     mysql           0:off   1:off   2:on    3:on    4:on    5:on    6:off 
+     上面打印出来的内容中，2~5为on就是开机启动了
+7. 修改/etc/my.cnf
+   设置MySQL的字符集，配置MySQL表明不区分大小写（默认情况下，MySQL对表名区分大小写，列名不区分大小写）。在[mysqld]下面加入如下内容：
+   #vi /etc/my.cnf
+character_set_server=utf8 
+character_set_client=utf8 
+collation-server=utf8_general_ci 
+lower_case_table_names=1 
+max_connections=1000
+查看表名区分大小写
+mysql> show variables like '%low%';
+其中 lower_case_table_names 的值是 0，0 代表区分大小写，1 代表不区分大小写
+8. MySQL的默认安装位置
+/var/lib/mysql/               #数据库目录
+/usr/share/mysql              #配置文件目录
+/usr/bin                     #相关命令目录
+/etc/init.d/mysql              #启动脚本
+9.创建数据库
+mysql>CREATE DATABASE `vipdb` CHARACTER SET 'utf8';
+9. 创建用户
+mysql>grant select,insert,update,delete,create,drop on vipdb.* to 'csair'@'%' identified by '123!@#456';
+说明：给用户csair分配可对数据库vipdb所有表进行所有操作的权限，并设定口令为123!@#456。
+mysql>flush privileges; #刷新系统权限表；
+10.停止MySQL服务
+# service mysql stop
+
+
+查看防火墙状态
+service iptables status
+关闭防火墙
+service iptables stop
+重启防火墙
+service iptables restart
+开启防火墙3306端口
+#vi /etc/sysconfig/iptables
+-A INPUT -m state --state NEW -m tcp -p tcp --dport 3306 -j ACCEPT
+
+创建表
+CREATE TABLE `csair_face` (
+   `id` varchar(96) DEFAULT NULL,
+   `name` varchar(300) DEFAULT NULL,
+   `phone` varchar(300) DEFAULT NULL,
+   `photo` varchar(765) DEFAULT NULL,
+   `createtime` datetime DEFAULT NULL,
+   `updatetime` datetime DEFAULT NULL,
+   `flag` varchar(6) DEFAULT NULL,
+   `remark` varchar(765) DEFAULT NULL,
+   `image` mediumblob,
+   `station` double DEFAULT NULL,
+
+   `gender` varchar(10) DEFAULT NULL,
+   `unit` varchar(100) DEFAULT NULL,
+   `department` varchar(100) DEFAULT NULL,
+   `job` varchar(50) DEFAULT NULL,
+   `roundTripFlight` varchar(100) DEFAULT NULL,
+   `nameOfPaymentUnit` varchar(100) DEFAULT NULL,
+   `vatSpecialInvcice` varchar(10) DEFAULT NULL,
+   KEY `csair_face_id` (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `smscounter` (
+   `phone` varchar(32) NOT NULL,
+   `sendCount` int(11) NOT NULL,
+   `regeditDate` varchar(8) NOT NULL
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
