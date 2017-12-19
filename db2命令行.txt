@@ -1,0 +1,15 @@
+1.查看db2版本: db2level
+1.启动实例(db2inst1): db2start
+2.停止实例(db2inst1): db2stop
+3.列出所有实例(db2inst1): db2ilist
+4.列出当前实例: db2 get instance
+5.列出所有数据库: db2 list db directory
+5.列出所有活动的数据库: db2 list active databases
+6.创建数据库: db2 create db test
+7.删除数据库: db2 drop db test
+8.连接数据库: db2 connect to test [user db2 using pwd]
+9.断开数据库连接: db2 connect reset/db2 terminate
+9.查看当前数据库表空间分配状况: db2 list tablespaces show detail
+10.显示当前用户所有表: db2 list tables 
+11.查询数据: db2 select * from tb1
+12.执行sql脚本: db2 -tvf script1.sql
