@@ -1,0 +1,10 @@
+1、失败重试代码
+int MAX_RETRIES = 5;
+for(int i = 0; i < MAX_RETRIES; i++) {
+  try {
+    getPage(url);
+    break;
+  } catch(Exception e) {
+    //日志
+  }
+}
