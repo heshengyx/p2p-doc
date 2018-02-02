@@ -8,3 +8,12 @@ for(int i = 0; i < MAX_RETRIES; i++) {
     //日志
   }
 }
+2、倒数递归
+public void countdown(int n) {
+  if (n == 0) {
+    System.out.println("end");
+  } else {
+    System.out.println(n);
+    countdown(n-1);
+  }
+}
